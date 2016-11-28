@@ -5,9 +5,13 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
-var index = require('./routes/index');
-var users = require('./routes/users');
+/*mongoose读取数据库*/
+var mongoose=require('./config/mongoose');
+var db=mongoose();
 
+var index = require('./routes/index');
+
+var users = require('./routes/users');
 var app = express();
 
 // view engine setup
