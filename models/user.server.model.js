@@ -3,32 +3,40 @@
  */
 var mongoose=require('mongoose');
 
-//用户Schema
 var UserSchema=new mongoose.Schema({
+    /*自增长主键 格式：年月日时分秒 4位随机数*/
     uid:{
-        type:Number,
-        unique:true
+        type:String,
+        unique:true,
+        required:true
     },
+    /*用户名登录账号*/
     userName:{
         type:String,
-        require:true
+        required:true
     },
+    /*邮箱*/
     email:String,
-    password:String,
-    phone:String,
+    /*密码：加密*/
+    password:{
+        type:String,
+        required:true
+    },
+    /*电话：手机短信验证*/
+    phone:{
+        type:String,
+        required:true
+    },
+    /*创建时间*/
     createTime:{
         type:Date,
         default:Date.now
     },
-    delete:Number
+    /*是否删除*/
+    delete:{
+        type:Number,
+        default:0
+    }
 });
 
-UserSchema.statics.findByUid=function (uid,cb) {
-    this.findOne({uid:uid},function (err,users) {
-        if(err){
-            cb(err,null);
-        }
-        cb(null,users);
-    });
-}
 mongoose.model('User',UserSchema);

@@ -8,5 +8,7 @@ module.exports=function () {
     //连接数据库
     var db=mongoose.connect(config.mongodb);
     require('../models/user.server.model');
+    require('../models/news.server.model');
+    require('../models/comment.server.model');
     return db;
 }
