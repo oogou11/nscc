@@ -3,7 +3,7 @@
  */
 var mongoose=require('mongoose');
 
-var comment=new mongoose.Schema({
+var Comment=new mongoose.Schema({
     uid:{
         type:String,
         required:true,
@@ -18,9 +18,9 @@ var comment=new mongoose.Schema({
         ref:'news'
     },
     createTime:{
-        type:date,
+        type:Date,
         default:new Date()
     }
 });
 
-mongoose.mode('Comment',comment);
+mongoose.model('Comment',Comment);

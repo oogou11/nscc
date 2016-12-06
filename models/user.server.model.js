@@ -15,8 +15,12 @@ var UserSchema=new mongoose.Schema({
         type:String,
         required:true
     },
+    /*性别*/
+    gender:String,
     /*邮箱*/
     email:String,
+    /*简介*/
+    bio:String,
     /*密码：加密*/
     password:{
         type:String,
@@ -24,8 +28,7 @@ var UserSchema=new mongoose.Schema({
     },
     /*电话：手机短信验证*/
     phone:{
-        type:String,
-        required:true
+        type:String
     },
     /*创建时间*/
     createTime:{

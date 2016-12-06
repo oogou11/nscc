@@ -10,21 +10,54 @@ var contextError=require('../config/error.config');
 module.exports={
     /*新增用户*/
     create:function (req,res,next) {
-        var users=new User(req.body);
+        var userName=req.fields.userName;
+        var gender=req.fields.gender;
+        var bio = req.fields.bio;
+        var password = req.fields.password;
+        var rePassword = req.fields.repassword;
+
         async.parallel([
+            /*验证*/
+            function (callback) {
+                if (!(userName.length >= 1 && userName.length <= 10)) {
+                    callback(-1,'名字请限制在 1-10 个字符');
+                }
+                if (['1', '2', '3'].indexOf(gender) === -1) {
+                    callback(-1,'性别只能是 1、2 或 3');
+                }
+                if (!(bio.length >= 1 && bio.length <= 30)) {
+                    callback(-1,'个人简介请限制在 1-30 个字符');
+                }
+                if (!req.files.avatar.name) {
+                    callback(-1,'缺少头像');
+                }
+                if (password.length < 6) {
+                    callback(-1,'密码至少 6 个字符');
+                }
+                if (password !== rePassword) {
+                    callback(-1,'两次输入密码不一致');
+                }
+                var users=new User({
+                    userName:userName,
+                    password:password,
+                    gender:gender,
+                    bio:bio
+                });
+                callback(null,users);
+            },
             /*查找用户*/
-            function(callback) {
-                users.findOne({userName:users.userName},function (err,users) {
+            function(users,callback) {
+                users.findOne({userName:users.userName},function (err,doc) {
                     if(err){
                         callback();
                     }
-                    if(users)
+                    if(doc)
                     {
                         callback(contextError.userExists,'用户已存在')
                     }
                     callback(null,users);
                 });
-            },function (callback) {
+            },function (users,callback) {
                 //密码加密
                 crypto.encryption(users.password,function (err,result) {
                     if(err){
@@ -42,9 +75,11 @@ module.exports={
             }
         ],function (err,result) {
             if(err){
-                return next(err);
+                req.flash('error',result[0]);
+                res.redirect('/register');
             }
-            res.json('注册成功');
+            req.flash('success', '注册成功');
+            res.redirect('/index');
         });
     },
     /*通过用户名查找用户*/
@@ -81,6 +116,8 @@ module.exports={
             if(err){
                 return next(err);
             }
+            delete result.password;
+            req.session.user=result;
             res.json(result);
         });
     },
@@ -113,7 +150,8 @@ module.exports={
                }
                return res.json(doc);
             });
-    }
+    },
+
 }
 
 
