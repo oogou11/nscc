@@ -20860,7 +20860,7 @@ $.fn.state = function(parameters) {
             ;
             module.debug('Flashing text message', text, duration);
             text     = text     || settings.text.flash;
-            duration = duration || settings.flashDuration;
+            duration text= duration || settings.flashDuration;
             callback = callback || function() {};
             module.update.text(text);
             setTimeout(function(){

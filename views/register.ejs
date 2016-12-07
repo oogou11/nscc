@@ -1,28 +1,38 @@
-<% layout('layout.ejs') -%>
-<form id="register-data">
-    <div class="login-form">
-        <div class="control-group">
-            <input type="text" class="form-control" placeholder="姓名" name="userName" id="userName" />
-        </div>
-        <div class="control-group">
-            <input type="password" class="form-control" placeholder="密码" name="password" id="password" />
-        </div>
-        <div class="control-group">
-        <input type="text" class="form-control" placeholder="电话" name="phone" id="phone" />
-        </div>
-        <button id="btn_register" type="button" class="btn btn-primary btn-lg btn-block">注册</button>
-        <a class="login-link" href="./login" >已有帐号</a>
+<%- include header.ejs %>
+<div class="ui grid">
+    <div class="four wide column"></div>
+    <div class="eight wide column">
+        <form class="ui form segment" action="./register" method="post" enctype="multipart/form-data">
+            <div class="field required">
+                <label>用户名</label>
+                <input placeholder="用户名" type="text" name="userName" >
+            </div>
+            <div class="field required">
+                <label>密码</label>
+                <input placeholder="密码" type="password" name="password">
+            </div>
+            <div class="field required">
+                <label>重复密码</label>
+                <input placeholder="重复密码" type="password" name="repassword">
+            </div>
+            <div class="field required">
+                <label>性别</label>
+                <select class="ui compact selection dropdown" name="gender">
+                    <option value="1">男</option>
+                    <option value="2">女</option>
+                    <option value="3">保密</option>
+                </select>
+            </div>
+            <div class="field required">
+                <label>头像</label>
+                <input type="file" name="avatar">
+            </div>
+            <div class="field required">
+                <label>个人简介</label>
+                <textarea name="bio" rows="5" v-model="bio"></textarea>
+            </div>
+            <input type="submit" class="ui button fluid" value="注册">
+    </form>
     </div>
-</form>
-
-<script>
-    $("#btn_register").click(function () {
-        $.post('./register',
-                $( "#register-data" ).serialize(),
-                function (data) {
-                    alert(data);
-                    $(location).attr("href", "./login");
-                }
-        )
-    });
-</script>
+</div>
+<%- include footer.ejs %>
