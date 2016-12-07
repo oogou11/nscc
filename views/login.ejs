@@ -1,27 +1,14 @@
-<% layout('layout.ejs') -%>
-    <div class="login-form">
-        <div class="control-group">
-            <input type="text" class="form-control" placeholder="用户名" name="userName" id="userName" />
-            <label class="login-field-icon fui-man-16" for="username"></label>
-        </div>
-        <div class="control-group">
-            <input type="password" class="form-control" placeholder="密码" name="password" id="password" />
-            <label class="login-field-icon fui-lock-16" for="password"></label>
-        </div>
-        <button type="button" class="btn btn-primary btn-large btn-block" id="login">登录</button>
-
-        <a class="login-link" href="#" >找回密码</a>
-        <a class="login-link" href="./register" >注册帐号</a>
-    </div>
-<script>
-    $("#login").click(function () {
-        $.post('./login',
-                {
-                    userName:$("#userName").val(),
-                    password:$("#password").val()
-                },
-                function (data) {
-                    alert(data);
-        });
-    });
-</script>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>blog.title</title>
+    <link rel="stylesheet" href="../semantic-ui/semantic.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="../flat-ui/dist/js/vendor/jquery.min.js"></script>
+    <script src="../semantic-ui/semantic.min.js"></script>
+</head>
+<body>
+<%- include components/nav.ejs %>
+<%- include components/nav-setting.ejs %>
+<%- include components/notification.ejs %>
