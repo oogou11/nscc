@@ -3,13 +3,13 @@
         <div class="ui floating dropdown button">
             <i class="icon bars"></i>
             <div class="menu">
-                <% if (0) { %>
-                <a class="item" href="/index?author=">个人主页</a>
+                <% if (user) { %>
+                <a class="item" href="/index?author=<%= user.uid %>">个人主页</a>
                 <div class="divider"></div>
                 <a class="item" href="/news/create">发表文章</a>
-                <a class="item" href="/logout">登出</a>
+                <a class="item" href="/users/logout">登出</a>
                 <% } else { %>
-                <a class="item" href="/login">登录</a>
+                <a class="item" href="/users/login">登录</a>
                 <a class="item" href="/register">注册</a>
                 <% } %>
             </div>

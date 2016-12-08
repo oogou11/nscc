@@ -19,6 +19,8 @@ var UserSchema=new mongoose.Schema({
     gender:String,
     /*邮箱*/
     email:String,
+    /*头像*/
+    avatar:String,
     /*简介*/
     bio:String,
     /*密码：加密*/

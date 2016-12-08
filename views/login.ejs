@@ -1,14 +1,20 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <title>blog.title</title>
-    <link rel="stylesheet" href="../semantic-ui/semantic.min.css">
-    <link rel="stylesheet" href="/css/style.css">
-    <script src="../flat-ui/dist/js/vendor/jquery.min.js"></script>
-    <script src="../semantic-ui/semantic.min.js"></script>
-</head>
-<body>
-<%- include components/nav.ejs %>
-<%- include components/nav-setting.ejs %>
-<%- include components/notification.ejs %>
+<%- include header.ejs %>
+
+<div class="ui grid">
+    <div class="four wide column"></div>
+    <div class="eight wide column">
+        <form class="ui form segment" action="/users/login" method="post" enctype="multipart/form-data">
+            <div class="field required">
+                <label>用户名</label>
+                <input placeholder="用户名" type="text" name="userName">
+            </div>
+            <div class="field required">
+                <label>密码</label>
+                <input placeholder="密码" type="password" name="password">
+            </div>
+            <input type="submit" class="ui button fluid" value="登录">
+        </form>
+    </div>
+</div>
+
+<%- include footer.ejs %>

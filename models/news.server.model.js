@@ -3,12 +3,7 @@
  */
 var mongoose=require('mongoose');
 
-var NewsSchema=new mongoose.Schema({
-    /*主键*/
-    uid:{
-        type:String,
-        required:true
-    },
+var News=new mongoose.Schema({
     /*标题*/
     title:{
         type:String,
@@ -19,16 +14,20 @@ var NewsSchema=new mongoose.Schema({
         type:String,
         required:true
     },
-    /*创建时间*/
-    createDate:{
-        type:Date,
-        default:Date.now
-    },
     /*作者信息 外键*/
     author:{
         type:mongoose.Schema.ObjectId,
         ref:'User'
+    },
+    /*点击量*/
+    pv:{
+        type:Number
+    },
+    /*创建时间*/
+    createDate:{
+        type:Date,
+        default:Date.now
     }
 });
 
-mongoose.model('News',NewsSchema);
+mongoose.model('News',News);
