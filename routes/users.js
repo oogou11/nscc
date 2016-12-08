@@ -3,8 +3,6 @@ var router = express.Router();
 var controller=require('../controller/user.server.controller');
 var checkLogin = require('../middlewares/check');
 
-router.get('/users',checkLogin.checkLogin,controller.getAllUsers);
-
 router.get('/login',checkLogin.checkNotLogin,function (req,res) {
     res.render('login');
 });

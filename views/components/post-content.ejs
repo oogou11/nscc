@@ -1,0 +1,38 @@
+<div class="post-content">
+    <div class="ui grid">
+        <div class="four wide column">
+            <a class="avatar"
+               href="/news?author=<%= news.author._id %>"
+               data-title="<%= news.author.name %> | <%= ({m: '男', f: '女', x: '保密'})[news.author.gender] %>"
+               data-content="<%= news.author.bio %>">
+                <img class="avatar" src="/images/<%= news.author.avatar %>">
+            </a>
+        </div>
+
+        <div class="eight wide column">
+            <div class="ui segment">
+                <h3><a href="/news/<%= news._id %>"><%= news.title %></a></h3>
+                <pre><%- news.content %></pre>
+                <div>
+                    <span class="tag"><%= news.created_at %></span>
+                    <span class="tag right">
+            <span>浏览(<%= news.pv %>)</span>
+            <span>留言(<%= news.commentsCount %>)</span>
+
+                        <% if (user && news.author._id && user._id.toString() === news.author._id.toString()) { %>
+                        <div class="ui inline dropdown">
+                <div class="text"></div>
+                <i class="dropdown icon"></i>
+                <div class="menu">
+                  <div class="item"><a href="/news/<%= news._id %>/edit">编辑</a></div>
+                  <div class="item"><a href="/news/<%= news._id %>/remove">删除</a></div>
+                </div>
+              </div>
+                        <% } %>
+
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

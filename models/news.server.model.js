@@ -2,7 +2,7 @@
  * Created by zhangh on 2016/11/29.
  */
 var mongoose=require('mongoose');
-
+var marked=require('marked');
 var News=new mongoose.Schema({
     /*标题*/
     title:{

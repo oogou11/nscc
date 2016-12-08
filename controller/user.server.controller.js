@@ -6,7 +6,6 @@ var User=mongoose.model('User');
 var crypto=require('../common/server.common');
 var async=require('async');
 var path=require('path');
-var contextError=require('../config/error.config');
 var sha1 = require('sha1');
 
 module.exports={
@@ -51,8 +50,7 @@ module.exports={
             gender: gender,
             avatar: avatar,
             bio: bio,
-            password: password,
-            uid: (new Date() - 0).toString()
+            password: password
         });
         user.save(function (err, result) {
             if (err) {
@@ -87,37 +85,6 @@ module.exports={
                 // 跳转到主页
                 res.redirect('/index');
             }).catch(next);
-    },
-    /*通过UID查找用户*/
-    findUserByUid:function (req,res,next) {
-        var uid=req.params.uid;
-        if(!uid){
-            return next(new Error('uid is empty'));
-        }
-        User.findOne({uid:uid})
-            .exec(function (err,doc) {
-            if(err){
-                return next(err);
-            }
-            if(!doc){
-                return next(new Error('the user is not exists'));
-            }
-            return res.json(doc);
-        });
-    },
-    /*获取用户信息，分页*/
-    getAllUsers:function (req,res,next) {
-        var pageSize=parseInt(req.query.pageSize,10)||10;
-        var pageStart=parseInt(req.query.pageStart,10)||1;
-        User.find()
-            .skip((pageStart-1)*pageSize)
-            .limit(pageSize)
-            .exec(function (err,doc) {
-               if(err){
-                   return next(err);
-               }
-               return res.json(doc);
-            });
     }
 }
 

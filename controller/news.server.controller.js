@@ -5,7 +5,8 @@ var mongoose=require('mongoose');
 var News=mongoose.model('News');
 var Users=mongoose.model('User');
 var async=require('async');
-var contextError=require('../config/error.config');
+var marked=require('marked');
+
 
 module.exports= {
     /*新增文章*/
@@ -60,6 +61,10 @@ module.exports= {
     },
     /*根据ObjId查找news*/
     findNewsById:function (req,res,next) {
-
+        var news_objId=req.param.news_uid;
+        News.findOne({_id:news_objId})
+            .populate({path:'author',model:'User'})
+            .contentToHtml()
+            .exec();
     }
 }

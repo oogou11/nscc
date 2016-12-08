@@ -3,7 +3,7 @@
 <div class="ui grid">
     <div class="four wide column">
         <a class="avatar"
-           href="/news?author=<%= user.uid %>"
+           href="/news?author=<%= user._id %>"
            data-title="<%= user.userName %> | <%= ({m: '男', f: '女', x: '保密'})[user.gender] %>"
            data-content="<%= user.bio %>">
             <img class="avatar" src="/images/<%= user.avatar %>">
