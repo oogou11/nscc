@@ -3,7 +3,7 @@
         <div class="four wide column">
             <a class="avatar"
                href="/news?author=<%= news.author._id %>"
-               data-title="<%= news.author.name %> | <%= ({m: '男', f: '女', x: '保密'})[news.author.gender] %>"
+               data-title="<%= news.author.name %> | <%= ({1: '男', 2: '女', 3: '保密'})[news.author.gender] %>"
                data-content="<%= news.author.bio %>">
                 <img class="avatar" src="/images/<%= news.author.avatar %>">
             </a>
