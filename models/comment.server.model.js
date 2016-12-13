@@ -4,22 +4,22 @@
 var mongoose=require('mongoose');
 
 var Comment=new mongoose.Schema({
-    uid:{
-        type:String,
+    author: {
+        type: mongoose.Schema.ObjectId,
         required:true,
-        default:(new Date()-0).toString()
+        ref: 'User'
     },
-    user:{
-        type:mongoose.Schema.ObjectId,
-        ref:'User'
+    news: {
+        type: mongoose.Schema.ObjectId,
+        required:true,
+        ref: 'News'
     },
-    news:{
-        type:mongoose.Schema.ObjectId,
-        ref:'news'
+    content: {
+        type: String,
+        required: true
     },
-    createTime:{
-        type:Date,
-        default:new Date()
+    createTime: {
+        type:String
     }
 });
 

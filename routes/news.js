@@ -4,6 +4,7 @@
 var express = require('express');
 var router = express.Router();
 var controller=require('../controller/news.server.controller');
+var commentController=require('../controller/comnets.server.contoller');
 var checkLogin = require('../middlewares/check');
 
 /*用户所有文章
@@ -30,14 +31,10 @@ router.post('/:news_uid/edit', checkLogin.checkLogin,controller.updateNewsById);
 // GET /posts/:postId/remove 删除一篇文章
 router.get('/:news_uid/remove', checkLogin.checkLogin,controller.deleteNewsById);
 
-
 // POST /posts/:postId/comment 创建一条留言
-router.post('/:news_uid/comment', checkLogin.checkLogin, function(req, res, next) {
-    res.send(req.flash());
-});
+router.post('/:news_uid/comment', checkLogin.checkLogin,commentController.createComment);
 // GET /posts/:postId/comment/:commentId/remove 删除一条留言
-router.get('/:news_uid/comment/:commentId/remove', checkLogin.checkLogin, function(req, res, next) {
-    res.render('');
-});
+router.get('/:news_uid/comment/:commentId/remove', checkLogin.checkLogin,
+commentController.deleteCommentById);
 
 module.exports = router;

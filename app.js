@@ -76,4 +76,14 @@ app.use('/users', users);
 app.use('/index',index);
 app.use('/news',news);
 
+app.use(function (req, res) {
+  if (!res.headersSent) {
+    res.render('404');
+  }
+});
+app.use(function (err, req, res, next) {
+  res.render('error', {
+    error: err
+  });
+});
 module.exports = app;

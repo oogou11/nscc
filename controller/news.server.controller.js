@@ -4,8 +4,10 @@
 var mongoose=require('mongoose');
 var News=mongoose.model('News');
 var Users=mongoose.model('User');
+var Comment=mongoose.model('Comment');
 var async=require('async');
 var moment=require('moment');
+var commentController=require('./comnets.server.contoller');
 mongoose.Promise = global.Promise;
 
 module.exports= {
@@ -21,7 +23,7 @@ module.exports= {
                 }
                 if (!content.length) {
                     callback(-1, '请填写内容');
-                }
+                }else
                 callback(null, '');
             },
             function (user, callback) {
@@ -31,7 +33,7 @@ module.exports= {
                     }
                     if (!user) {
                         callback(-1, '用户不存在');
-                    }
+                    }else
                     callback(null, user);
                 });
             },
@@ -40,12 +42,13 @@ module.exports= {
                     title: title,
                     content: content,
                     author: user,
-                    pv: 0
+                    pv: 0,
+                    createTime:moment(Date.now()).format('YYYY/MM/DD HH:mm:ss')
                 });
                 news.save(function (err) {
                     if (err) {
-                        callback(-1, '服务端异常,请联系管理员');
-                    }
+                        callback(-1, '服务端异常,请联系管理员:'+err.message);
+                    }else
                     callback(null, news._id);
                 });
             }
@@ -63,14 +66,17 @@ module.exports= {
     findNewsAndPvAdd: function (req, res, next) {
         var news_id = req.params.news_uid;
         async.parallel([
+            //更新浏览数量
             function (callback) {
                 News.update({_id: news_id}, {$inc: {pv: 1}}, function (err) {
                     if (err) {
                         callback(-1, '更新访问数量异常：' + err.message);
+                    }else{
+                        callback(null,'');
                     }
-                    callback(null, '更新成功');
                 });
             },
+            //查找news
             function (callback) {
                 var query = News.findOne({_id: news_id});
                 query.populate({path: 'author', model: 'User'})
@@ -80,9 +86,30 @@ module.exports= {
                         }
                         if (!doc) {
                             callback(-1, '未找到数据');
+                        }else {
+                            callback(null, doc);
                         }
-                        callback(null, doc);
                     });
+            },
+            //统计留言总量
+            function (callback) {
+                commentController.getCommentTotalCount(news_id,function (err,doc) {
+                   if(err){
+                       callback(-1,'数据异常:'+err.message);
+                   }else{
+                       callback(null,doc);
+                   }
+                });
+            },
+            //评论
+            function (callback) {
+                commentController.getCommentByNewsID(news_id,function (err,doc) {
+                    if(err){
+                        callback(-1,'数据异常:'+err.message);
+                    }else{
+                        callback(null,doc);
+                    }
+                });
             }
         ], function (err, result) {
             var message;
@@ -94,12 +121,15 @@ module.exports= {
                 }
                 req.flash('error', message);
                 return res.redirect('/news/create');
+            } else {
+                var news = result[1];
+                var comments=result[3];
+                news.commentsCount=result[2];
+                return res.render('news/index', {
+                    news: news,
+                    comments: comments
+                });
             }
-            var news = result[1];
-            news.CreateDate = moment(news.CreateDate).format('L');
-            res.render('news/index', {
-                news: news
-            });
         });
     },
     //通过Id查找news
@@ -180,7 +210,7 @@ module.exports= {
                         }
                         if (!doc) {
                             callback(-1, '文章不存在');
-                        }
+                        }else
                         callback(null, doc);
                     });
             },
@@ -193,10 +223,19 @@ module.exports= {
                         if(err){
                             callback(-1,'操作失败:'+err.message);
                         }else{
-                            callback(null);
+                            callback(null,'');
                         }
                     });
                 }
+            },
+            //删除文章下的所有留言
+            function (empty,callback) {
+                commentController.deleteComment(news_id,function (err) {
+                    if(err){
+                        callback(-1,'失败:'+err.message);
+                    }else
+                    callback(null,'');
+                });
             }
         ], function (err, result) {
             if(err){

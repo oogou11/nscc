@@ -7,6 +7,7 @@ var crypto=require('../common/server.common');
 var async=require('async');
 var path=require('path');
 var sha1 = require('sha1');
+var moment=require('moment');
 
 module.exports={
     /*新增用户*/
@@ -50,13 +51,13 @@ module.exports={
             gender: gender,
             avatar: avatar,
             bio: bio,
-            password: password
+            password: password,
+            createTime:moment(Date.now()).format('YYYY/MM/DD HH:mm:ss')
         });
         user.save(function (err, result) {
             if (err) {
-                req.flash('error', '注册失败');
-                return res.redirect('/register');
-                next(e);
+                req.flash('error', '注册失败:'+err.message);
+                return res.redirect('/users/register');
             }
             delete user.password;
             req.session.user = user;

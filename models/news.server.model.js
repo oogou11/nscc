@@ -24,9 +24,8 @@ var News=new mongoose.Schema({
         type:Number
     },
     /*创建时间*/
-    createDate:{
-        type:Date,
-        default:Date.now
+    createTime:{
+        type:String
     }
 });
 mongoose.model('News',News);

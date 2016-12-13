@@ -4,12 +4,6 @@
 var mongoose=require('mongoose');
 
 var UserSchema=new mongoose.Schema({
-    /*自增长主键 格式：年月日时分秒 4位随机数*/
-    uid:{
-        type:String,
-        unique:true,
-        required:true
-    },
     /*用户名登录账号*/
     userName:{
         type:String,
@@ -34,8 +28,7 @@ var UserSchema=new mongoose.Schema({
     },
     /*创建时间*/
     createTime:{
-        type:Date,
-        default:Date.now
+        type:String
     },
     /*是否删除*/
     delete:{
