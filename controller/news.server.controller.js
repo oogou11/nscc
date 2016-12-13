@@ -6,6 +6,7 @@ var News=mongoose.model('News');
 var Users=mongoose.model('User');
 var async=require('async');
 var moment=require('moment');
+mongoose.Promise = global.Promise;
 
 module.exports= {
     /*新增文章*/
@@ -58,7 +59,6 @@ module.exports= {
             }
         });
     },
-
     //浏览文章记录+1
     findNewsAndPvAdd: function (req, res, next) {
         var news_id = req.params.news_uid;
@@ -68,12 +68,11 @@ module.exports= {
                     if (err) {
                         callback(-1, '更新访问数量异常：' + err.message);
                     }
-                    callback(null,'更新成功');
+                    callback(null, '更新成功');
                 });
             },
             function (callback) {
                 var query = News.findOne({_id: news_id});
-                mongoose.Promise = global.Promise;
                 query.populate({path: 'author', model: 'User'})
                     .exec(function (err, doc) {
                         if (err) {
@@ -87,20 +86,127 @@ module.exports= {
             }
         ], function (err, result) {
             var message;
-            if(err){
-                if(result.length>1){
-                    message=result[1];
-                }else{
-                    message=result[2];
+            if (err) {
+                if (result.length > 1) {
+                    message = result[1];
+                } else {
+                    message = result[2];
                 }
                 req.flash('error', message);
                 return res.redirect('/news/create');
             }
-            var news=result[1];
-            news.CreateDate=moment(news.CreateDate).format('L');
-            res.render('news/index',{
-                news:news
+            var news = result[1];
+            news.CreateDate = moment(news.CreateDate).format('L');
+            res.render('news/index', {
+                news: news
             });
         });
+    },
+    //通过Id查找news
+    findNewsById: function (req, res, next) {
+        var author = req.session.user._id;
+        var news_id = req.params.news_uid;
+        async.waterfall([
+            //获取文章
+            function (callback) {
+                News.findOne({_id: news_id})
+                    .populate({path: 'author', model: 'User'})
+                    .exec(function (err, doc) {
+                        if (err) {
+                            callback(-1, '查询异常:' + err.message);
+                        }
+                        if (!doc) {
+                            callback(-1, '文章不存在');
+                        }
+                        callback(null, doc);
+                    });
+            },
+            //判断当前用户是否是作者
+            function (news, callback) {
+                if (news.author._id.toString() !== author.toString()) {
+                    callback(-1, '无权限操作');
+                } else {
+                    callback(null, news);
+                }
+            }
+        ], function (err, result) {
+            if (err) {
+                req.flash('error', result);
+                return res.redirect('/index');
+            } else {
+                result.CreateDate = moment(result.CreateDate).format('L');
+                res.render('news/edit', {
+                    news: result
+                });
+            }
+        });
+    },
+    //更新文章
+    updateNewsById: function (req, res, next) {
+        var news_uid = req.params.news_uid;
+        var author = req.session.user._id;
+        var title = req.fields.title;
+        var content = req.fields.content;
+        News.findByIdAndUpdate(
+            news_uid,
+            {$set: {title: title, content: content}},
+            {new: true},
+            function (err, doc) {
+                if (err) {
+                    req.flash('error', '更新失败:' + err.message);
+                    return res.redirect('/news/'+news_uid+'/edit');
+                }
+                if (!doc) {
+                    req.flash('error', '更新后未找到文章');
+                }
+                else {
+                    req.flash('success', '操作成功');
+                }
+                return res.redirect('/news/'+news_uid);
+            });
+    },
+    //删除文章
+    deleteNewsById:function (req,res,next) {
+        var author = req.session.user._id;
+        var news_id = req.params.news_uid;
+
+        async.waterfall([
+            function (callback) {
+                News.findOne({_id: news_id})
+                    .populate({path: 'author', model: 'User'})
+                    .exec(function (err, doc) {
+                        if (err) {
+                            callback(-1, '查询异常:' + err.message);
+                        }
+                        if (!doc) {
+                            callback(-1, '文章不存在');
+                        }
+                        callback(null, doc);
+                    });
+            },
+            //判断当前用户是否是作者
+            function (news, callback) {
+                if (news.author._id.toString() !== author.toString()) {
+                    callback(-1, '无权限操作');
+                } else {
+                    News.findByIdAndRemove(news._id,function (err,result) {
+                        if(err){
+                            callback(-1,'操作失败:'+err.message);
+                        }else{
+                            callback(null);
+                        }
+                    });
+                }
+            }
+        ], function (err, result) {
+            if(err){
+                req.flash('error',result);
+                return res.redirect('/news/'+news_id);
+            }else {
+                req.flash('success','操作成功');
+                return res.redirect('/index');
+            }
+        });
+
     }
 }

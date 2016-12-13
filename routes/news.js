@@ -22,19 +22,15 @@ router.post('/create',checkLogin.checkLogin,controller.create_news);
 router.get('/:news_uid',checkLogin.checkLogin,controller.findNewsAndPvAdd);
 
 // GET /posts/:news_uid/edit 更新文章页
-router.get('/:news_uid/edit', checkLogin.checkLogin,function (req,res) {
-    res.send(req.flash());
-});
+router.get('/:news_uid/edit', checkLogin.checkLogin,controller.findNewsById);
 
 // POST /posts/:news_uid/edit 更新一篇文章
-router.post('/:news_uid/edit', checkLogin.checkLogin,function (req,res) {
-    res.send(req.flash());
-});
+router.post('/:news_uid/edit', checkLogin.checkLogin,controller.updateNewsById);
 
 // GET /posts/:postId/remove 删除一篇文章
-router.get('/:news_uid/remove', checkLogin.checkLogin, function(req, res, next) {
-    res.render('');
-});
+router.get('/:news_uid/remove', checkLogin.checkLogin,controller.deleteNewsById);
+
+
 // POST /posts/:postId/comment 创建一条留言
 router.post('/:news_uid/comment', checkLogin.checkLogin, function(req, res, next) {
     res.send(req.flash());

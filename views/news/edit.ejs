@@ -4,23 +4,24 @@
     <div class="four wide column">
         <a class="avatar"
            href="/news?author=<%= user._id %>"
-           data-title="<%= user.userName %> | <%= ({1: '男', 2: '女', 3: '保密'})[user.gender] %>"
+           data-title="<%= user.name %> | <%= ({1: '男', 2: '女', 3: '保密'})[user.gender] %>"
            data-content="<%= user.bio %>">
             <img class="avatar" src="/images/<%= user.avatar %>">
         </a>
     </div>
     <div class="eight wide column">
-        <form class="ui form segment" method="post" action="/news/create" enctype="multipart/form-data">
+        <form class="ui form segment" method="post" action="/news/<%= news._id %>/edit" enctype="multipart/form-data">
             <div class="field required">
                 <label>标题</label>
-                <input type="text" name="title">
+                <input type="text" name="title" value="<%= news.title %>">
             </div>
             <div class="field required">
                 <label>内容</label>
-                <textarea name="content" rows="15"></textarea>
+                <textarea name="content" rows="15"><%= news.content %></textarea>
             </div>
             <input type="submit" class="ui button" value="发布">
         </form>
     </div>
 </div>
+
 <%- include ../footer.ejs %>
