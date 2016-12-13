@@ -7,6 +7,8 @@ var bodyParser = require('body-parser');
 var flash = require('connect-flash');
 var session=require('express-session');
 var config = require('config-lite');
+var winston=require('winston');
+var expressWinston = require('express-winston');
 
 
 /*mongoose读取数据库*/
@@ -86,4 +88,18 @@ app.use(function (err, req, res, next) {
     error: err
   });
 });
+
+// 正常请求的日志
+app.use(expressWinston.logger({
+  transports: [
+    new (winston.transports.Console)({
+      json: true,
+      colorize: true
+    }),
+    new winston.transports.File({
+      filename: 'logs/success.log'
+    })
+  ]
+}));
+
 module.exports = app;
