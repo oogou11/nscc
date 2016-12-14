@@ -8,8 +8,8 @@ var commentController=require('../controller/comnets.server.contoller');
 var checkLogin = require('../middlewares/check');
 
 /*用户所有文章
-*Get news?author=***
-* */
+*Get news?author=....*/
+router.get('/',controller.getAllNewsByAuthor);
 
 /*发表文章 页面*/
 router.get('/create',checkLogin.checkLogin,function (req,res) {
@@ -20,7 +20,7 @@ router.get('/create',checkLogin.checkLogin,function (req,res) {
 router.post('/create',checkLogin.checkLogin,controller.create_news);
 
 /*获取特定文章*/
-router.get('/:news_uid',checkLogin.checkLogin,controller.findNewsAndPvAdd);
+router.get('/:news_uid',controller.findNewsAndPvAdd);
 
 // GET /posts/:news_uid/edit 更新文章页
 router.get('/:news_uid/edit', checkLogin.checkLogin,controller.findNewsById);

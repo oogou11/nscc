@@ -1,4 +1,5 @@
 <div class="post-content">
+    <% newses.forEach(function (news) { %>
     <div class="ui grid">
         <div class="four wide column">
             <a class="avatar"
@@ -18,20 +19,10 @@
                     <span class="tag right">
                         <span>浏览(<%= news.pv %>)</span>
                         <span>留言(<%= news.commentsCount %>)</span>
-
-                        <% if (user && news.author._id && user._id.toString() === news.author._id.toString()) { %>
-                        <div class="ui inline dropdown">
-                            <div class="text"></div>
-                            <i class="dropdown icon"></i>
-                            <div class="menu">
-                                <div class="item"><a href="/news/<%= news._id %>/edit">编辑</a></div>
-                                <div class="item"><a href="/news/<%= news._id %>/remove">删除</a></div>
-                            </div>
-                        </div>
-                        <% } %>
                     </span>
                 </div>
             </div>
         </div>
     </div>
+    <% }) %>
 </div>

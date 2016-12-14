@@ -28,4 +28,5 @@ var News=new mongoose.Schema({
         type:String
     }
 });
+
 mongoose.model('News',News);

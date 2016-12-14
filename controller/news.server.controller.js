@@ -10,7 +10,26 @@ var moment=require('moment');
 var commentController=require('./comnets.server.contoller');
 mongoose.Promise = global.Promise;
 
+
+
 module.exports= {
+    //获取作者所有发布的文章
+    getAllNewsByAuthor:function(req,res,next) {
+        var author = req.query.author;
+        News.find({author: author})
+            .populate({path: 'author', model: 'User'})
+            .sort({_id: 1})
+            .exec(function (err, docs) {
+                if (err) {
+                    req.flash('error', '系统异常:' + err.message);
+                    res.redirect('/index');
+                } else {
+                    res.render('news/author_news', {
+                        newses: docs
+                    });
+                }
+            });
+    },
     /*新增文章*/
     create_news: function (req, res, next) {
         var uid = req.session.user.uid;
@@ -127,7 +146,8 @@ module.exports= {
                 news.commentsCount=result[2];
                 return res.render('news/index', {
                     news: news,
-                    comments: comments
+                    comments: comments,
+                    user:req.session.user
                 });
             }
         });
